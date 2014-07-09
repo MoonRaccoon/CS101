@@ -1,0 +1,24 @@
+def symmertric(l):
+    n = len(l)
+    counter = 0
+    checker = False
+    while counter < n:
+        i = 0
+        while i < n:
+            j = 0
+            while j < n:
+                if l[i] == l[i][j] + l[i+1][j]:
+                    checker = True
+                j += 1
+            i += 1
+        counter += 1
+    return checker
+
+print symmetric([["cat", "dog", "fish"],
+                ["dog", "dog", "fish"],
+                ["fish", "fish", "cat"]])
+#>>> True
+
+print symmetric([["cat", "dog", "fish"],
+                ["dog", "dog", "dog"],
+                ["fish","fish","cat"]])
