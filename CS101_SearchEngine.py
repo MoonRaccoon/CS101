@@ -1,5 +1,6 @@
 #Finish crawl web
 
+
 def get_page(url):
     # This is a simulated get_page procedure so that you can test your
     # code on two pages "http://xkcd.com/353" and "http://xkcd.com/554".
@@ -14,6 +15,7 @@ def get_page(url):
         return ""
     return ""
 
+
 def get_next_target(page):
     start_link = page.find('<a href=')
     if start_link == -1:
@@ -23,7 +25,8 @@ def get_next_target(page):
     url = page[start_quote + 1:end_quote]
     return url, end_quote
 
-def union(p,q):
+
+def union(p, q):
     for e in q:
         if e not in p:
             p.append(e)
@@ -32,7 +35,7 @@ def union(p,q):
 def get_all_links(page):
     links = []
     while True:
-        url,endpos = get_next_target(page)
+        url, endpos = get_next_target(page)
         if url:
             links.append(url)
             page = page[endpos:]
@@ -40,14 +43,36 @@ def get_all_links(page):
             break
     return links
 
-def crawl_web(seed, max_pages):
+
+def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
+    index = []
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
-            union(tocrawl, get_all_links(get_page(page)))
+            content = get_page(page)
+            add_page_to_index(index, page, content)
+            union(tocrawl, get_all_links(content))
             crawled.append(page)
-        if len(crawled) == max_pages:
-            break
-    return crawled
+    return index
+
+
+def add_page_to_index(index, url, content):
+    words = content.split()
+    for word in words:
+        add_to_index(index, word, url)
+
+
+def add_to_index(index, keyword, url):
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        # not found, add new keyword to index
+        index[keyword] = [url]
+
+
+def lookup(index, keyword):
+    if keyword in index:
+        return index[keyword]
+    return None
